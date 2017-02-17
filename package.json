@@ -5,7 +5,7 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "start": "cd client && ng build && cd .. && tsc -p server/ && node server/app/bin/www.js",
+    "start": "ng build && tsc -p server/ && node dist/app/bin/www.js",
     "serve" : "ng serve",
     "test": "ng test",
     "lint": "ng lint",

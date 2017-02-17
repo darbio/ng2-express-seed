@@ -14,4 +14,4 @@
 
 ### Scripts
 
-`ng build && tsc -p server/ && node server/app/bin/www.js`
+`ng build && tsc -p server/ && node dist/app/bin/www.js`
