@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node dist/app/bin/www.js",
-    "postinstall": "ng build --aot -prod && tsc - server/",
+    "postinstall": "ng build --aot -prod && tsc -p server/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
