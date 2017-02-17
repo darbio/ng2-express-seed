@@ -1,1 +1,1 @@
-web: cd client && ng build && cd .. && tsc -p server/ && node server/app/bin/www.js
+web: ng build && tsc -p server/ && node dist/app/bin/www.js
