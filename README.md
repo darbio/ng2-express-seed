@@ -14,7 +14,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Running
 ### Development
 
-`ng build && tsc -p server/ && node --inspect dist/app/bin/www.js`
+`ng build && tsc -p server/ && node --inspect --debug-brk dist/app/bin/www.js`
 
 ### Production
 
