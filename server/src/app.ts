@@ -6,7 +6,9 @@ import * as favicon from 'serve-favicon';
 import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
+
 import index from './routes/index';
+import status from './routes/v1/status';
 
 const app: express.Express = express();
 
@@ -20,9 +22,10 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname,'public')));
+//app.use(express.static(path.join(__dirname,'../../client/dist')));
 
-app.use('/',index);
+app.use('/', express.static(path.join(__dirname,'../../client/dist')));
+app.use('/api/v1/status', status);
 
 //catch 404 and forward to error handler
 app.use((req,res,next) => {
@@ -43,7 +46,7 @@ if(process.env.NODE_ENV === 'development') {
       message: err.message,
       error: err
     });
-  });    
+  });
 }
 
 //production error handler
