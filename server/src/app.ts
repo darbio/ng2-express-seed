@@ -25,22 +25,7 @@ const forceSSL = function() {
 }
 app.use(forceSSL());
 
-//view engine setup
-//app.set('views',path.join(__dirname,'views'));
-//app.set('view engine','pug');
-
-//uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname,'public','favicon.ico')));
-if (process.env.NODE_ENV === 'development') {
-
-}
-else {
-  app.use(logger('combined'));
-}
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({extended: false}));
-// app.use(cookieParser());
-//app.use(express.static(path.join(__dirname,'../../client/dist')));
+app.use(logger('combined'));
 
 app.use('/', express.static(path.join(__dirname,'../../dist')));
 app.use('/api/v1/status', status);
@@ -50,17 +35,15 @@ app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname + '../../dist'));
 });
 
-//catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use((req,res,next) => {
   var err = new Error('Not Found');
   err['status'] = 404;
   next(err);
 });
 
-//error handlers
-
-//development error handler
-//will print stacktrace
+// Error handlers
+// Development error handler - will print stacktrace
 if(process.env.NODE_ENV === 'development') {
   app.use((err: Error,req,res,next) => {
     res.status(err['status'] || 500);
@@ -72,8 +55,7 @@ if(process.env.NODE_ENV === 'development') {
   });
 }
 
-//production error handler
-// no stacktrace leaked to user
+// Production error handler - no stacktrace leaked to user
 app.use((err: Error,req,res,next) => {
   res.status(err['status'] || 500);
   res.json({
