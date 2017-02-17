@@ -12,6 +12,19 @@ import status from './routes/v1/status';
 
 const app: express.Express = express();
 
+// Redirect all http requests to https
+const forceSSL = function() {
+  return function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https' && req.host !== 'localhost') {
+      return res.redirect(
+       ['https://', req.get('Host'), req.url].join('')
+      );
+    }
+    next();
+  }
+}
+app.use(forceSSL());
+
 //view engine setup
 app.set('views',path.join(__dirname,'views'));
 app.set('view engine','pug');
@@ -26,6 +39,11 @@ app.use(cookieParser());
 
 app.use('/', express.static(path.join(__dirname,'../../dist')));
 app.use('/api/v1/status', status);
+
+// For all GET requests, send back index.html so that PathLocationStrategy can be used
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname + '../../dist'));
+});
 
 //catch 404 and forward to error handler
 app.use((req,res,next) => {
