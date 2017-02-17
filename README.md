@@ -1,17 +1,12 @@
-# DustSafe
+# Angular 2 with Express Api
+
+Seed project for an Angular 2 (CLI) application with an Express Api deployed to Heroku.
 
 ## Running
+### Development
 
-`npm start`
+`ng build && tsc -p server/ && npm start`
 
-### Old
+### Production
 
-1. Open the client folder
-2. Run `ng build`
-3. Open the root folder
-4. Run `tsc -p server/`
-5. Run `node server/app/bin/www.js`
-
-### Scripts
-
-`ng build && tsc -p server/ && node dist/app/bin/www.js`
+`ng build --aot -prod && tsc -p server/ && npm start`
