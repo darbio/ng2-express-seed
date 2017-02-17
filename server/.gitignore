@@ -4,3 +4,7 @@ npm-debug.log
 .settings/*
 .git/*
 bower_components/*
+
+# typescript compiled files
+/app/*.js
+/app/*.js.map
