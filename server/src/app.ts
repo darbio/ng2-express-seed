@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 //app.use(express.static(path.join(__dirname,'../../client/dist')));
 
-app.use('/', express.static(path.join(__dirname,'../../client/dist')));
+app.use('/', express.static(path.join(__dirname,'../../dist')));
 app.use('/api/v1/status', status);
 
 //catch 404 and forward to error handler
