@@ -15,7 +15,7 @@ const app: express.Express = express();
 // Redirect all http requests to https
 const forceSSL = function() {
   return function (req, res, next) {
-    if (req.headers['x-forwarded-proto'] !== 'https' && req.host !== 'localhost') {
+    if (req.headers['x-forwarded-proto'] !== 'https' && req.hostname !== 'localhost') {
       return res.redirect(
        ['https://', req.get('Host'), req.url].join('')
       );
@@ -26,15 +26,20 @@ const forceSSL = function() {
 app.use(forceSSL());
 
 //view engine setup
-app.set('views',path.join(__dirname,'views'));
-app.set('view engine','pug');
+//app.set('views',path.join(__dirname,'views'));
+//app.set('view engine','pug');
 
 //uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname,'public','favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
+if (process.env.NODE_ENV === 'development') {
+
+}
+else {
+  app.use(logger('combined'));
+}
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: false}));
+// app.use(cookieParser());
 //app.use(express.static(path.join(__dirname,'../../client/dist')));
 
 app.use('/', express.static(path.join(__dirname,'../../dist')));
@@ -59,7 +64,7 @@ app.use((req,res,next) => {
 if(process.env.NODE_ENV === 'development') {
   app.use((err: Error,req,res,next) => {
     res.status(err['status'] || 500);
-    res.render('error',{
+    res.json({
       title: 'error',
       message: err.message,
       error: err
@@ -71,7 +76,7 @@ if(process.env.NODE_ENV === 'development') {
 // no stacktrace leaked to user
 app.use((err: Error,req,res,next) => {
   res.status(err['status'] || 500);
-  res.render('error',{
+  res.json({
     title: 'error',
     message: err.message,
     error: {}
