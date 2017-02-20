@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Headers, Http, RequestOptions, URLSearchParams } from '@angular/http';
 
 import { OAuthService } from 'angular-oauth2-oidc';
 
@@ -10,7 +11,10 @@ import { OAuthService } from 'angular-oauth2-oidc';
 export class AppComponent {
   title = 'app works!';
 
-  constructor(private oauthService: OAuthService) {
+  constructor(
+    private oauthService: OAuthService,
+    private http: Http
+  ) {
     // URL of the SPA to redirect the user to after login
     this.oauthService.redirectUri = window.location.origin;
 
@@ -37,7 +41,8 @@ export class AppComponent {
         // This method just tries to parse the token(s) within the url when
         // the auth-server redirects the user back to the web-app
         // It dosn't send the user the the login page
-        this.oauthService.tryLogin({});
+        this.oauthService.tryLogin({
+        });
     });
   }
 
