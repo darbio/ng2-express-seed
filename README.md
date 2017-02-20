@@ -1,6 +1,20 @@
 # Angular 2 with Express Api
 
-Seed project for an Angular 2 (CLI) application with an Express Api deployed to Heroku.
+Seed project for an Angular 2 (CLI) application with an Express Api deployed to Heroku, secured using Okta OIDC.
+
+# Okta
+
+This application uses Okta as an OIDC compliant IDP.
+
+The Okta application should be setup as follows:
+
+* Authorization Code
+* Refresh Token
+* Implicit (Hybrid)
+    * Allow ID Token with implicit grant type
+    * Allow Access Token with implicit grant type
+
+The Okta API should have the endpoint of the web application set on it's API to allow CORS requests for the discovery document. If you don't do this, you will get a CORS error when you load the application (when it tries to get the disco document).
 
 # Client
 
