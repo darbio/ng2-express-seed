@@ -1,11 +1,26 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpModule, Http, RequestOptions } from '@angular/http';
 
 import { AppComponent } from './app.component';
 
-import { OAuthModule } from 'angular-oauth2-oidc';
+import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
+import { AuthHttp, AuthConfig } from 'angular2-jwt';
+
+export function authHttpServiceFactory(
+  http: Http,
+  options: RequestOptions,
+  oauthService: OAuthService
+) {
+  return new AuthHttp(new AuthConfig({
+    tokenName: 'token',
+        tokenGetter: (() => oauthService.getAccessToken()),
+        globalHeaders: [
+          { 'Content-Type' : 'application/json' }
+        ],
+    }), http, options);
+}
 
 @NgModule({
   declarations: [
@@ -17,7 +32,17 @@ import { OAuthModule } from 'angular-oauth2-oidc';
     HttpModule,
     OAuthModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    {
+      provide: AuthHttp,
+      useFactory: authHttpServiceFactory,
+      deps: [
+        Http,
+        RequestOptions,
+        OAuthService
+      ]
+    }
+  ],
   bootstrap: [
     AppComponent
   ]

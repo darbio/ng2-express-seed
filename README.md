@@ -14,7 +14,7 @@ The Okta application should be setup as follows:
     * Allow ID Token with implicit grant type
     * Allow Access Token with implicit grant type
 
-The Okta API should have the endpoint of the web application set on it's API to allow CORS requests for the discovery document. If you don't do this, you will get a CORS error when you load the application (when it tries to get the disco document).
+The Okta API should have the endpoint of the web application set on it's API to allow CORS requests for the discovery document. If you don't do this, you will get a CORS error when you load the application (when it tries to get the disco document). http://developer.okta.com/docs/api/getting_started/enabling_cors.html
 
 # Client
 

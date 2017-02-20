@@ -3,6 +3,7 @@ import { Headers, Http, RequestOptions, Response, URLSearchParams } from '@angul
 
 import { OAuthService } from 'angular-oauth2-oidc';
 import * as JwtDecode from 'jwt-decode';
+import { AuthHttp } from 'angular2-jwt';
 
 @Component({
   selector: 'app-root',
@@ -11,10 +12,12 @@ import * as JwtDecode from 'jwt-decode';
 })
 export class AppComponent {
   title = 'app works!';
+  status: any = {};
 
   constructor(
     private oauthService: OAuthService,
-    private http: Http
+    private http: Http,
+    private authHttp: AuthHttp
   ) {
     // URL of the SPA to redirect the user to after login
     this.oauthService.redirectUri = window.location.origin;
@@ -48,5 +51,11 @@ export class AppComponent {
 
   login() {
     this.oauthService.initImplicitFlow();
+  }
+
+  get() {
+    this.authHttp.get('/api/v1/status').subscribe((response: Response) => {
+      this.status = response.json();
+    })
   }
 }
