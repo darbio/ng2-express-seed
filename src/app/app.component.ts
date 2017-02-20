@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Headers, Http, RequestOptions, Response, URLSearchParams } from '@angular/http';
 
 import { OAuthService } from 'angular-oauth2-oidc';
+import * as JwtDecode from 'jwt-decode';
 
 @Component({
   selector: 'app-root',
@@ -45,6 +46,7 @@ export class AppComponent {
           validationHandler: context => {
             return http.get(this.oauthService.issuer + '/.well-known/openid-configuration').subscribe((response: Response) => {
               let doc = response.json();
+              let jwt = JwtDecode(context.idToken);
 
               // Verify that the iss (issuer) claim in the ID Token exactly matches the issuer identifier for your Okta org (which is typically obtained during Discovery.
 
@@ -57,7 +59,7 @@ export class AppComponent {
               // A nonce claim must be present and its value checked to verify that it is the same value as the one that was sent in the Authentication Request. The client should check the nonce value for replay attacks.
 
               // The client should check the auth_time claim value and request re-authentication using the prompt=login parameter if it determines too much time has elapsed since the last end-user authentication.
-              
+
             });
           }
         });
