@@ -7,10 +7,36 @@ import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 
+import * as passport from 'passport';
+import * as passportHttpBearer from 'passport-http-bearer';
+
+import * as jwtDecode from 'jwt-decode';
+
 import index from './routes/index';
 import status from './routes/v1/status';
 
 const app: express.Express = express();
+
+// Set up bearer authentication strategy
+passport.use(new passportHttpBearer.Strategy(
+  function (token, done) {
+    let err = null;
+
+    // Get the user from the token
+    // NB: This could call the userinfo endpoint instead
+    let jwt = jwtDecode(token);
+
+    let user = {
+      sub : jwt.sub,
+      uid : jwt.uid,
+      email : jwt.email,
+      name : jwt.name,
+      preferred_username : jwt.preferred_username
+    };
+
+    return done(err, user);
+  }
+));
 
 // Redirect all http requests to https
 const forceSSL = function() {
@@ -28,7 +54,7 @@ app.use(forceSSL());
 app.use(logger('combined'));
 
 app.use('/', express.static(path.join(__dirname,'../../dist')));
-app.use('/api/v1/status', status);
+app.use('/api/v1/status', passport.authenticate('bearer', { session: false }), status);
 
 // For all GET requests, send back index.html so that PathLocationStrategy can be used
 app.get('/*', function(req, res) {

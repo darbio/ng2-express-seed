@@ -15,7 +15,7 @@ export function authHttpServiceFactory(
 ) {
   return new AuthHttp(new AuthConfig({
     tokenName: 'token',
-        tokenGetter: (() => oauthService.getAccessToken()),
+        tokenGetter: (() => oauthService.getIdToken()),
         globalHeaders: [
           { 'Content-Type' : 'application/json' }
         ],
