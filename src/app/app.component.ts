@@ -42,27 +42,7 @@ export class AppComponent {
         // This method just tries to parse the token(s) within the url when
         // the auth-server redirects the user back to the web-app
         // It dosn't send the user the the login page
-        this.oauthService.tryLogin({
-          validationHandler: context => {
-            return http.get(this.oauthService.issuer + '/.well-known/openid-configuration').subscribe((response: Response) => {
-              let doc = response.json();
-              let jwt = JwtDecode(context.idToken);
-
-              // Verify that the iss (issuer) claim in the ID Token exactly matches the issuer identifier for your Okta org (which is typically obtained during Discovery.
-
-              // Verify that the aud (audience) claim contains the client_id of your app.
-
-              // Verify the signature of the ID Token according to JWS using the algorithm specified in the JWT alg header property. Use the public keys provided by Okta via the Discovery Document.
-
-              // Verify that the expiry time (from the exp claim) has not already passed.
-
-              // A nonce claim must be present and its value checked to verify that it is the same value as the one that was sent in the Authentication Request. The client should check the nonce value for replay attacks.
-
-              // The client should check the auth_time claim value and request re-authentication using the prompt=login parameter if it determines too much time has elapsed since the last end-user authentication.
-
-            });
-          }
-        });
+        this.oauthService.tryLogin({ });
     });
   }
 
