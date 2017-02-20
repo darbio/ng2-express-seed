@@ -20,6 +20,10 @@ The Okta API should have the endpoint of the web application set on it's API to 
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0-beta.32.3.
 
+# Server
+
+The server uses express 4 secured with the passport-http-bearer middleware (http://passportjs.org/docs/oauth2-api).
+
 ## Deployment
 
 * `heroku create`

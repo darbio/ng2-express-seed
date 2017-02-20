@@ -6,35 +6,64 @@ import * as favicon from 'serve-favicon';
 import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
-
 import * as passport from 'passport';
 import * as passportHttpBearer from 'passport-http-bearer';
-
 import * as jwtDecode from 'jwt-decode';
+import * as request from 'request';
+
+import { Config } from '../../shared/config';
 
 import index from './routes/index';
 import status from './routes/v1/status';
 
 const app: express.Express = express();
+const config: Config = new Config();
 
 // Set up bearer authentication strategy
 passport.use(new passportHttpBearer.Strategy(
   function (token, done) {
-    let err = null;
-
-    // Get the user from the token
-    // NB: This could call the userinfo endpoint instead
     let jwt = jwtDecode(token);
 
-    let user = {
-      sub : jwt.sub,
-      uid : jwt.uid,
-      email : jwt.email,
-      name : jwt.name,
-      preferred_username : jwt.preferred_username
+    // Verify the token
+    var options = {
+        url: 'https://dev-460081.oktapreview.com/oauth2/v1/introspect',
+        method: 'POST',
+        headers: {
+          'Content-Type' : 'application/x-www-form-urlencoded',
+          'charset' : 'UTF-8'
+        },
+        form: {
+          token: token,
+          token_type_hint: 'id_token',
+          client_id : 'kgkNF8ILGmkR8Cj8f1Iz',
+          client_secret : 'REPLACE'
+        }
     };
 
-    return done(err, user);
+    // Start the request
+    request(options, function (error, response, body) {
+        if (error || response.statusCode != 200) {
+          return done(error);
+        }
+
+        if (!error && response.statusCode == 200) {
+          var userInfo = JSON.parse(body);
+
+          if (!userInfo.active) {
+            return done("User is not active");
+          }
+
+          let user = {
+            sub : userInfo.sub,
+            uid : userInfo.uid,
+            email : userInfo.email,
+            name : userInfo.name,
+            preferred_username : userInfo.preferred_username
+          };
+
+          return done(error, user);
+        }
+    });
   }
 ));
 
