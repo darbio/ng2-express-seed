@@ -1,6 +1,6 @@
 # Angular 2 with Express Api
 
-Seed project for an Angular 2 (CLI) application with an Express Api deployed to Heroku, secured using Okta OIDC.
+Seed project for an Angular 2 (CLI) application with a clustered Express Api deployed to Heroku, secured using Okta OIDC.
 
 # ng-bootstrap
 
@@ -37,6 +37,21 @@ The server uses express 4 secured with the passport-http-bearer middleware (http
 ### Development
 
 `ng build && tsc -p src/ && node --inspect --debug-brk dist/app/bin/www.js`
+
+or using foreman
+
+`ng build`
+`tsc -p src`
+`nf run`
+
+To use foreman, a file called `.env` should be created with the following content:
+
+```
+PORT=3000
+OKTA_SERVER_URL=
+AUTH_CLIENT_ID=
+AUTH_CLIENT_SECRET=
+```
 
 ### Production
 
