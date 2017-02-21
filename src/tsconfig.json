@@ -15,12 +15,6 @@
     "removeComments": true,
     "rootDir": "../src",
     "sourceMap": true,
-    "target": "es6",
-    "typeRoots": [
-      "../node_modules/@types"
-    ]
-  },
-  "include" : [
-    "../src/server/**/*.ts"
-  ]
+    "target": "es6"
+  }
 }
