@@ -11,13 +11,10 @@ import * as passportHttpBearer from 'passport-http-bearer';
 import * as jwtDecode from 'jwt-decode';
 import * as request from 'request';
 
-import { Config } from '../../shared/config';
-
 import index from './routes/index';
 import status from './routes/v1/status';
 
 const app: express.Express = express();
-const config: Config = new Config();
 
 // Set up bearer authentication strategy
 passport.use(new passportHttpBearer.Strategy(
