@@ -2,6 +2,10 @@
 
 Seed project for an Angular 2 (CLI) application with an Express Api deployed to Heroku, secured using Okta OIDC.
 
+# ng-bootstrap
+
+This application uses @ng-bootstrap and bootstrap 4 for bootstrap components.
+
 # Okta
 
 This application uses Okta as an OIDC compliant IDP.
@@ -32,11 +36,11 @@ The server uses express 4 secured with the passport-http-bearer middleware (http
 ## Running
 ### Development
 
-`ng build && tsc -p server/ && node --inspect --debug-brk dist/app/bin/www.js`
+`ng build && tsc -p src/ && node --inspect --debug-brk dist/app/bin/www.js`
 
 ### Production
 
-`ng build --aot -prod && tsc -p server/ && npm start`
+`ng build --aot -prod && tsc -p src/ && npm start`
 
 ## Code scaffolding
 

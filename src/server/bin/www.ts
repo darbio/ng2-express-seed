@@ -6,41 +6,66 @@
 import app from '../app';
 import * as http from 'http';
 
-/**
- * Get port from environment and store in Express.
- */
+import * as cluster from 'cluster';
+import * as os from 'os';
 
 const port = normalizePort(process.env.PORT || 3000);
-app.set('port',port);
 
-/**
- * Create HTTP server.
- */
+const numCPUs = os.cpus().length;
+if (cluster.isMaster) {
 
-var server = http.createServer(app);
+    console.log('Master cluster setting up ' + numWorkers + ' workers...')
 
-/**
- * Listen on provided port,on all network interfaces.
- */
+    cluster.on('online', worker => {
+        console.log('Worker ' + worker.process.pid + ' is online')
+    })
 
-server.listen(port, onListening);
-server.on('error',onError);
+    cluster.on('exit', (worker, code, signal) => {
+        console.log('Worker ' + worker.process.pid + ' died with code: ' + code + ', and signal: ' + signal)
+        console.log('Starting a new worker')
+        cluster.fork()
+    })
+
+    var numWorkers = require('os').cpus().length
+
+    for (var i = 0; i < numWorkers; i++) cluster.fork()
+
+} else {
+  /**
+   * Get port from environment and store in Express.
+   */
+
+  app.set('port',port);
+
+  /**
+   * Create HTTP server.
+   */
+
+  var server = http.createServer(app);
+
+  /**
+   * Listen on provided port,on all network interfaces.
+   */
+
+  server.listen(port, onListening);
+  server.on('error',onError);
+}
 
 /**
  * Normalize a port into a number,string,or false.
  */
 function normalizePort(val : any): number|string|boolean {
   let port = parseInt(val,10);
-  
+
   if(isNaN(port)){
     //name pipe
     return val;
   }
-  
+
   if(port >= 0){
     return port;
   }
-  
+
   return false;
 }
 
@@ -51,9 +76,9 @@ function onError(error) {
   if (error.syscall != 'listen') {
     throw error;
   }
-  
+
   var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
-  
+
   //handle specific listen errors with friendly messages
   switch(error.code) {
     case 'EACCES':
@@ -68,7 +93,7 @@ function onError(error) {
       throw error;
   }
 }
-  
+
 /**
  * Event listener for HTTP server "listening" event.
  */
