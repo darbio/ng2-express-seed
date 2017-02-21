@@ -6,11 +6,66 @@ import * as favicon from 'serve-favicon';
 import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
+import * as passport from 'passport';
+import * as passportHttpBearer from 'passport-http-bearer';
+import * as jwtDecode from 'jwt-decode';
+import * as request from 'request';
 
 import index from './routes/index';
 import status from './routes/v1/status';
 
+import { Config } from '../shared/config';
+
 const app: express.Express = express();
+const config: Config = new Config();
+
+// Set up bearer authentication strategy
+passport.use(new passportHttpBearer.Strategy(
+  function (token, done) {
+    let jwt = jwtDecode(token);
+
+    // Verify the token
+    var options = {
+        url: config.okta_server_url + '/oauth2/v1/introspect',
+        method: 'POST',
+        headers: {
+          'Content-Type' : 'application/x-www-form-urlencoded',
+          'charset' : 'UTF-8'
+        },
+        form: {
+          token: token,
+          token_type_hint: 'id_token',
+          client_id : config.client_id,
+          client_secret : config.client_secret
+        }
+    };
+
+    // Start the request
+    request(options, function (error, response, body) {
+        if (error || response.statusCode != 200) {
+          return done(error);
+        }
+
+        if (!error && response.statusCode == 200) {
+          var userInfo = JSON.parse(body);
+
+          if (!userInfo.active) {
+            return done("User is not active");
+          }
+
+          let user = {
+            sub : userInfo.sub,
+            uid : userInfo.uid,
+            email : userInfo.email,
+            name : userInfo.name,
+            preferred_username : userInfo.preferred_username
+          };
+
+          return done(error, user);
+        }
+    });
+  }
+));
 
 // Redirect all http requests to https
 const forceSSL = function() {
@@ -28,7 +83,7 @@ app.use(forceSSL());
 app.use(logger('combined'));
 
 app.use('/', express.static(path.join(__dirname,'../../dist')));
-app.use('/api/v1/status', status);
+app.use('/api/v1/status', passport.authenticate('bearer', { session: false }), status);
 
 // For all GET requests, send back index.html so that PathLocationStrategy can be used
 app.get('/*', function(req, res) {
