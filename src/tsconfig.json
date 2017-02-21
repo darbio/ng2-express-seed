@@ -22,10 +22,5 @@
   },
   "include" : [
     "../src/server/**/*.ts"
-  ],
-  "exclude" : [
-    "../node_modules/**/*.ts",
-    "../e2e/*.ts",
-    "../src/**/*.spec.ts"
   ]
 }
