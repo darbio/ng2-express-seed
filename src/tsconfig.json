@@ -9,13 +9,23 @@
       "dom"
     ],
     "mapRoot": "./",
-    "module": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "../dist/out-tsc",
+    "outDir": "../dist",
+    "removeComments": true,
+    "rootDir": "../src",
     "sourceMap": true,
-    "target": "es5",
+    "target": "es6",
     "typeRoots": [
       "../node_modules/@types"
     ]
-  }
+  },
+  "include" : [
+    "../src/server/**/*.ts"
+  ],
+  "exclude" : [
+    "../node_modules/**/*.ts",
+    "../e2e/*.ts",
+    "../src/**/*.spec.ts"
+  ]
 }

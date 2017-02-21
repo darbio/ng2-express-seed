@@ -5,8 +5,8 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "start": "node dist/app/bin/www.js",
-    "postinstall": "ng build --aot -prod && tsc -p server/",
+    "start": "node dist/server/bin/www.js",
+    "postinstall": "ng build --aot -prod && tsc -p src/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
