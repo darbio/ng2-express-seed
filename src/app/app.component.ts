@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Headers, Http, RequestOptions, Response, URLSearchParams } from '@angular/http';
 
+import { Config } from '../shared/config';
+
 import { OAuthService } from 'angular-oauth2-oidc';
 import * as JwtDecode from 'jwt-decode';
 import { AuthHttp } from 'angular2-jwt';
@@ -14,6 +16,8 @@ export class AppComponent {
   title = 'app works!';
   status: any = {};
 
+  config: Config = new Config();
+
   constructor(
     private oauthService: OAuthService,
     private http: Http,
@@ -23,7 +27,7 @@ export class AppComponent {
     this.oauthService.redirectUri = window.location.origin;
 
     // The SPA's id. The SPA is registerd with this id at the auth-server
-    this.oauthService.clientId = "kgkNF8ILGmkR8Cj8f1Iz";
+    this.oauthService.clientId = this.config.client_id;
 
     // set the scope for the permissions the client should request
     // The first three are defined by OIDC.
@@ -38,7 +42,7 @@ export class AppComponent {
     this.oauthService.setStorage(sessionStorage);
 
     // The name of the auth-server that has to be mentioned within the token
-    this.oauthService.issuer = "https://dev-460081.oktapreview.com";
+    this.oauthService.issuer = this.config.okta_server_url;
 
     // Load Discovery Document and then try to login the user
     this.oauthService.loadDiscoveryDocument().then(() => {

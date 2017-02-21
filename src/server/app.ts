@@ -14,7 +14,10 @@ import * as request from 'request';
 import index from './routes/index';
 import status from './routes/v1/status';
 
+import { Config } from '../shared/config';
+
 const app: express.Express = express();
+const config: Config = new Config();
 
 // Set up bearer authentication strategy
 passport.use(new passportHttpBearer.Strategy(
@@ -23,7 +26,7 @@ passport.use(new passportHttpBearer.Strategy(
 
     // Verify the token
     var options = {
-        url: 'https://dev-460081.oktapreview.com/oauth2/v1/introspect',
+        url: config.okta_server_url + '/oauth2/v1/introspect',
         method: 'POST',
         headers: {
           'Content-Type' : 'application/x-www-form-urlencoded',
@@ -32,8 +35,8 @@ passport.use(new passportHttpBearer.Strategy(
         form: {
           token: token,
           token_type_hint: 'id_token',
-          client_id : 'kgkNF8ILGmkR8Cj8f1Iz',
-          client_secret : 'REPLACE'
+          client_id : config.client_id,
+          client_secret : config.client_secret
         }
     };
 
