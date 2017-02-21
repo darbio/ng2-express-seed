@@ -2,7 +2,7 @@
   {{title}}
 </h1>
 
-<button (click)="login()">Login</button>
-<button (click)="get()">Get status</button>
+<button class="btn btn-primary" (click)="login()"><i class="fa fa-user"></i> Login</button>
+<button class="btn btn-primary" (click)="get()">Get status</button>
 
 <p>{{ status | json}}</p>

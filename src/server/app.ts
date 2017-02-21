@@ -82,7 +82,7 @@ app.use(forceSSL());
 
 app.use(logger('combined'));
 
-app.use('/', express.static(path.join(__dirname,'../../dist')));
+app.use('/', express.static(path.join(__dirname,'../../dist/client')));
 app.use('/api/v1/status', passport.authenticate('bearer', { session: false }), status);
 
 // For all GET requests, send back index.html so that PathLocationStrategy can be used
