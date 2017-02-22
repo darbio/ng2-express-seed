@@ -20,7 +20,7 @@ export const AppRoutes = [
     children: [
       {
         path: '',
-        component: null,
+        component: LoginComponent,
         canActivate: [
           AuthGuardService
         ]
@@ -31,7 +31,7 @@ export const AppRoutes = [
       },
       {
         path: 'logout',
-        component: null,
+        component: LoginComponent,
         canActivate: [
           AuthGuardService
         ]
