@@ -8,17 +8,23 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { ConfigService } from './config.service';
+import { AuthService } from './auth.service';
+import { AuthGuardService } from './auth-guard.service';
 
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 import { AuthHttp, AuthConfig } from 'angular2-jwt';
 
 import { AppRoutes } from './app.routes';
 import { HomeComponent } from './home/home.component';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    UnauthorizedComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +52,9 @@ import { HomeComponent } from './home/home.component';
         ConfigService
       ],
       multi: true
-    }
+    },
+    AuthService,
+    AuthGuardService
   ],
   bootstrap: [
     AppComponent
