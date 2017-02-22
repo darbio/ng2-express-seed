@@ -13,6 +13,7 @@ import * as request from 'request';
 
 import index from './routes/index';
 import status from './routes/v1/status';
+import client_config from './routes/v1/config/client';
 
 import { Config } from '../shared/config';
 
@@ -84,6 +85,7 @@ app.use(logger('combined'));
 
 app.use('/', express.static(path.join(__dirname,'../../dist/client')));
 app.use('/api/v1/status', passport.authenticate('bearer', { session: false }), status);
+app.use('/api/v1/config', client_config);
 
 // For all GET requests, send back index.html so that PathLocationStrategy can be used
 app.get('/*', function(req, res) {

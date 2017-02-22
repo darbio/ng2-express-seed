@@ -40,9 +40,9 @@ The server uses express 4 secured with the passport-http-bearer middleware (http
 
 or using foreman
 
-`ng build`
-`tsc -p src`
-`nf run`
+* `ng build`
+* `tsc -p src`
+* `nf start`
 
 To use foreman, a file called `.env` should be created with the following content:
 
