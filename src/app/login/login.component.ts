@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { OAuthService } from 'angular-oauth2-oidc';
 
@@ -12,6 +13,7 @@ import { AuthService } from '../auth.service';
 export class LoginComponent implements OnInit {
 
   constructor(
+    private router: Router,
     private auth: AuthService,
     private oauthService: OAuthService
   ) { }
@@ -21,7 +23,7 @@ export class LoginComponent implements OnInit {
       this.oauthService.initImplicitFlow();
     }
     else {
-      
+      this.router.navigate(['/']);
     }
   }
 

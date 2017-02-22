@@ -15,8 +15,26 @@ export class AuthGuardService implements CanActivate {
     if (this.auth.loggedIn()) {
       return true;
     } else {
-      this.router.navigate(['account', 'login']);
+      this.router.navigate(['/account', 'login']);
       return false;
+    }
+  }
+}
+
+@Injectable()
+export class NotAuthGuardService implements CanActivate {
+
+  constructor(
+    private auth: AuthService,
+    private router: Router
+  ) {}
+
+  canActivate() {
+    if (this.auth.loggedIn()) {
+      this.router.navigate(['/account']);
+      return false;
+    } else {
+      return true;
     }
   }
 }
