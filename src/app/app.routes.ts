@@ -1,6 +1,8 @@
 import { AuthGuardService, NotAuthGuardService } from './auth-guard.service';
+import { AccountComponent } from './account/account.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 export const AppRoutes = [
@@ -20,7 +22,7 @@ export const AppRoutes = [
     children: [
       {
         path: '',
-        component: LoginComponent,
+        component: AccountComponent,
         canActivate: [
           AuthGuardService
         ]
@@ -34,7 +36,7 @@ export const AppRoutes = [
       },
       {
         path: 'logout',
-        component: LoginComponent,
+        component: LogoutComponent,
         canActivate: [
           AuthGuardService
         ]

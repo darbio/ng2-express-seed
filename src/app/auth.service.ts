@@ -9,6 +9,14 @@ export class AuthService {
     private oauthService: OAuthService
   ) { }
 
+  login() {
+    this.oauthService.initImplicitFlow();
+  }
+
+  logout() {
+    this.oauthService.logOut();
+  }
+
   loggedIn() {
     let token = this.oauthService.getIdToken();
 
