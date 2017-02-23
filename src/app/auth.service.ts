@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
 import { OAuthService } from 'angular-oauth2-oidc';
+import { Location } from '@angular/common';
 
 @Injectable()
 export class AuthService {
 
   constructor(
+    private location: Location,
     private oauthService: OAuthService
   ) { }
 
