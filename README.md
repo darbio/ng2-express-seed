@@ -36,13 +36,7 @@ The server uses express 4 secured with the passport-http-bearer middleware (http
 ## Running
 ### Development
 
-`ng build && tsc -p src/ && node --inspect --debug-brk dist/app/bin/www.js`
-
-or using foreman
-
-* `ng build`
-* `tsc -p src`
-* `nf start`
+`npm run dev`
 
 To use foreman, a file called `.env` should be created with the following content:
 

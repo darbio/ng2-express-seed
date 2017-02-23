@@ -83,13 +83,14 @@ app.use(forceSSL());
 
 app.use(logger('combined'));
 
-app.use('/', express.static(path.join(__dirname,'../../dist/client')));
+app.use('/', express.static(path.join(__dirname,'../client')));
 app.use('/api/v1/status', passport.authenticate('bearer', { session: false }), status);
 app.use('/api/v1/config', client_config);
 
 // For all GET requests, send back index.html so that PathLocationStrategy can be used
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname + '../../dist'));
+app.all('*', (req: any, res: any) => {
+  console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
+  res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
 });
 
 // Catch 404 and forward to error handler
