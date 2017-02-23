@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewContainerRef } from '@angular/core';
 import { Headers, Http, RequestOptions, Response, URLSearchParams } from '@angular/http';
 
 import { ConfigService, ClientConfig } from './config.service';
@@ -6,6 +6,7 @@ import { ConfigService, ClientConfig } from './config.service';
 import { OAuthService } from 'angular-oauth2-oidc';
 import * as JwtDecode from 'jwt-decode';
 import { AuthHttp } from 'angular2-jwt';
+import { ToastsManager } from 'ng2-toastr/ng2-toastr'
 
 @Component({
   selector: 'app-root',
@@ -20,8 +21,13 @@ export class AppComponent {
     private oauthService: OAuthService,
     private configService: ConfigService,
     private http: Http,
-    private authHttp: AuthHttp
+    private authHttp: AuthHttp,
+    private toastr: ToastsManager,
+    private vRef: ViewContainerRef
   ) {
+    // Set up toastr
+    this.toastr.setRootViewContainerRef(vRef);
+
     // URL of the SPA to redirect the user to after login
     this.oauthService.redirectUri = window.location.origin;
 
