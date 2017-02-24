@@ -21,9 +21,29 @@ import { Config } from '../shared/config';
 const app: express.Express = express();
 const config: Config = new Config();
 
-const provider = new Provider("http://localhost:3000/op");
+const provider = new Provider(config.okta_server_url);
 
-provider.initialize().then(() => {
+provider.initialize({
+  clients: [
+    {
+      client_id: 'foo',
+      client_secret: 'bar',
+      grant_types: [
+        'implicit'
+      ],
+      response_types: [
+        'id_token token'
+      ],
+      redirect_uris: [
+        'https://lvh.me/account/login/callback'
+      ]
+    }
+  ]
+})
+.then(() => {
+  // Set up OIDC provider
+  provider.app.proxy = true;
+
   // Set up bearer authentication strategy
   passport.use(new passportHttpBearer.Strategy(
     function (token, done) {
@@ -75,7 +95,7 @@ provider.initialize().then(() => {
   // Redirect all http requests to https
   const forceSSL = function() {
     return function (req, res, next) {
-      if (req.headers['x-forwarded-proto'] !== 'https' && req.hostname !== 'localhost') {
+      if (req.headers['x-forwarded-proto'] !== 'https' && req.hostname !== 'localhost' && req.hostname !== 'lvh.me') {
         return res.redirect(
          ['https://', req.get('Host'), req.url].join('')
         );
