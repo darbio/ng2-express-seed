@@ -18,17 +18,17 @@ import { AuthHttp, AuthConfig } from 'angular2-jwt';
 
 import { AppRoutes } from './app.routes';
 import { HomeComponent } from './home/home.component';
-import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { AccountComponent } from './account/account.component';
 import { LoginCallbackComponent } from './login-callback/login-callback.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    UnauthorizedComponent,
     AccountComponent,
-    LoginCallbackComponent
+    LoginCallbackComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

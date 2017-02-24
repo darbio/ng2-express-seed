@@ -2,7 +2,8 @@ import { AuthGuardService, NotAuthGuardService } from './auth-guard.service';
 import { AccountComponent } from './account/account.component';
 import { HomeComponent } from './home/home.component';
 import { LoginCallbackComponent } from './login-callback/login-callback.component';
-import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { ServerErrorComponent } from './server-error/server-error.component';
 
 export const AppRoutes = [
   {
@@ -44,5 +45,8 @@ export const AppRoutes = [
       }
     ]
   },
-  { path: 'unauthorized', component: UnauthorizedComponent }
+  {
+    path: '**',
+    component: PageNotFoundComponent
+  }
 ];

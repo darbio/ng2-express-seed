@@ -20,10 +20,13 @@ export class AppErrorHandler extends ErrorHandler {
     // Load any dependencies
     this.ensureDependencies();
 
-    // If this is a 401 redirect
-    if (error.status && error.status == 401) {
-      this.auth.login();
-      return;
+    // HTTP Errors
+    if (error.status){
+      if (error.status == 401) {
+        // If this is a 401 then login
+        this.auth.login();
+        return;
+      }
     }
 
     // Add the error to toast
