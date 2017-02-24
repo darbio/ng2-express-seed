@@ -3,7 +3,6 @@ import { AccountComponent } from './account/account.component';
 import { HomeComponent } from './home/home.component';
 import { LoginCallbackComponent } from './login-callback/login-callback.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { ServerErrorComponent } from './server-error/server-error.component';
 
 export const AppRoutes = [
   {
