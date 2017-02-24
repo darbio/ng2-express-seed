@@ -33,17 +33,6 @@ export class LoginCallbackComponent implements OnInit {
           }
         });
     });
-
-    // Redirect to the page
-    // this.route.queryParams.subscribe((params: Params) => {
-    //   let redirect = params['redirect'];
-    //   if (redirect) {
-    //     this.router.navigateByUrl(redirect);
-    //   }
-    //   else {
-    //     this.router.navigate(['/']);
-    //   }
-    // });
   }
 
 }
