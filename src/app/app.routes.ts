@@ -1,13 +1,16 @@
 import { AuthGuardService, NotAuthGuardService } from './auth-guard.service';
 import { AccountComponent } from './account/account.component';
 import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
-import { LogoutComponent } from './logout/logout.component';
+import { LoginCallbackComponent } from './login-callback/login-callback.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 export const AppRoutes = [
   {
     path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'about',
     component: HomeComponent
   },
   {
@@ -29,16 +32,14 @@ export const AppRoutes = [
       },
       {
         path: 'login',
-        component: LoginComponent,
+        children: [
+          {
+            path: 'callback',
+            component: LoginCallbackComponent
+          }
+        ],
         canActivate: [
           NotAuthGuardService
-        ]
-      },
-      {
-        path: 'logout',
-        component: LogoutComponent,
-        canActivate: [
-          AuthGuardService
         ]
       }
     ]

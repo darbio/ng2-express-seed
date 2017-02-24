@@ -41,7 +41,7 @@
     "@types/passport-http-bearer": "^1.0.30",
     "@types/request": "0.0.40",
     "@types/serve-favicon": "^2.2.27",
-    "angular-oauth2-oidc": "^1.0.20",
+    "angular-oauth2-oidc": "darbio/angular-oauth2-oidc",
     "angular2-jwt": "^0.1.28",
     "body-parser": "^1.14.2",
     "bootstrap": "^4.0.0-alpha.6",

@@ -2,7 +2,7 @@
   {{title}}
 </h1>
 
-<a class="btn btn-primary" [routerLink]="['/account', 'logout']"><i class="fa fa-user"></i> Logout</a>
+<button (click)="logout()"><i class="fa fa-user"></i> Logout</button>
 <button class="btn btn-primary" (click)="get()">Get status</button>
 
 <p>{{ status | json}}</p>
