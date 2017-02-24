@@ -54,6 +54,7 @@
     "jwt-decode": "^2.1.0",
     "morgan": "^1.6.1",
     "ng2-toastr": "^1.4.1",
+    "oidc-provider": "^1.12.1",
     "passport": "^0.3.2",
     "passport-http-bearer": "^1.0.1",
     "pug": "^2.0.0-beta6",
