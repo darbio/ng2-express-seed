@@ -21,7 +21,11 @@ import { Config } from '../shared/config';
 const app: express.Express = express();
 const config: Config = new Config();
 
-const provider = new Provider(config.okta_server_url);
+const provider = new Provider(config.okta_server_url, {
+  features: {
+    introspection: true
+  }
+});
 
 provider.initialize({
   clients: [
@@ -50,45 +54,50 @@ provider.initialize({
     function (token, done) {
       let jwt = jwtDecode(token);
 
-      // Verify the token
-      var options = {
-          url: config.okta_server_url + '/oauth2/v1/introspect',
-          method: 'POST',
-          headers: {
-            'Content-Type' : 'application/x-www-form-urlencoded',
-            'charset' : 'UTF-8'
-          },
-          form: {
-            token: token,
-            token_type_hint: 'id_token',
-            client_id : config.client_id,
-            client_secret : config.client_secret
-          }
-      };
+      // return done(null, {
+      //   sub : jwt.sub
+      // });
 
-      // Start the request
-      request(options, function (error, response, body) {
-          if (error || response.statusCode != 200) {
-            return done(error);
-          }
+      request({
+        url: config.okta_server_url + "/.well-known/openid-configuration",
+        method: 'GET'
+      }, function (error, response, body) {
+        if (error) {
+          throw error;
+        }
+        let discoveryDocument = JSON.parse(body);
 
-          if (!error && response.statusCode == 200) {
-            var userInfo = JSON.parse(body);
+        // Verify the token
+        var options = {
+            url: discoveryDocument.introspection_endpoint,
+            method: 'POST',
+            headers: {
+              'Content-Type' : 'application/x-www-form-urlencoded',
+              'charset' : 'UTF-8',
+              'Authorization' : 'Basic ' + new Buffer(config.client_id + ':' + config.client_secret).toString('base64')
+            },
+            form: {
+              token: token,
+              token_type_hint: 'id_token'
+            }
+        };
 
-            if (!userInfo.active) {
-              return done("User is not active");
+        // Start the request
+        request(options, function (error, response, body) {
+            if (error || response.statusCode != 200) {
+              return done(error);
             }
 
-            let user = {
-              sub : userInfo.sub,
-              uid : userInfo.uid,
-              email : userInfo.email,
-              name : userInfo.name,
-              preferred_username : userInfo.preferred_username
-            };
+            if (!error && response.statusCode == 200) {
+              var userInfo = JSON.parse(body);
 
-            return done(error, user);
-          }
+              if (!userInfo.active) {
+                return done("Token is not active");
+              }
+
+              return done(error, userInfo);
+            }
+        });
       });
     }
   ));
@@ -129,6 +138,9 @@ provider.initialize({
   // Error handlers
   // Development error handler - will print stacktrace
   if(process.env.NODE_ENV === 'development') {
+    // allow us to call self-signed https
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
     app.use((err: Error,req,res,next) => {
       res.status(err['status'] || 500);
       res.json({
