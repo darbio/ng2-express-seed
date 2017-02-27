@@ -10,7 +10,9 @@ import * as passport from 'passport';
 import * as passportHttpBearer from 'passport-http-bearer';
 import * as jwtDecode from 'jwt-decode';
 import * as request from 'request';
-import * as Provider from 'oidc-provider';
+//import * as Provider from 'oidc-provider';
+
+let Provider = require('oidc-provider');
 
 import index from './routes/index';
 import status from './routes/v1/status';
