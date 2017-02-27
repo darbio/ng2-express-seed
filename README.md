@@ -38,6 +38,10 @@ The server uses express 4 secured with the passport-http-bearer middleware (http
 
 `npm run dev`
 
+or
+
+`ng build && tsc -p src/ && node generate-keys.js && sudo nf start --ssl-key lvh.me.key --ssl-cert lvh.me.cert -x 443`
+
 To use foreman, a file called `.env` should be created with the following content:
 
 ```
