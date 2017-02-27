@@ -11,7 +11,7 @@ import * as os from 'os';
 
 const port = normalizePort(process.env.PORT || 3000);
 
-const numCPUs = os.cpus().length;
+const numWorkers = os.cpus().length;
 if (cluster.isMaster) {
 
     console.log('Master cluster setting up ' + numWorkers + ' workers...')
@@ -25,8 +25,6 @@ if (cluster.isMaster) {
         console.log('Starting a new worker')
         cluster.fork()
     })
-
-    var numWorkers = this.numCPUs;
 
     for (var i = 0; i < numWorkers; i++) cluster.fork()
 
