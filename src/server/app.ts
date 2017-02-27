@@ -48,15 +48,12 @@ provider.initialize({
 .then(() => {
   // Set up OIDC provider
   provider.app.proxy = true;
+  provider.app.keys = process.env.SECURE_KEY.split(',');
 
   // Set up bearer authentication strategy
   passport.use(new passportHttpBearer.Strategy(
     function (token, done) {
       let jwt = jwtDecode(token);
-
-      // return done(null, {
-      //   sub : jwt.sub
-      // });
 
       request({
         url: config.okta_server_url + "/.well-known/openid-configuration",
