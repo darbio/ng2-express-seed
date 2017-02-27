@@ -6,7 +6,7 @@
   "scripts": {
     "ng": "ng",
     "dev": "ng build && tsc -p src/ && cp -R src/server/keys/ dist/server/keys/ && sudo nf start --ssl-key lvh.me.key --ssl-cert lvh.me.cert -x 443",
-    "start": "node --inspect dist/server/bin/www.js",
+    "start": "node dist/server/bin/www.js",
     "postinstall": "ng build --aot -prod && tsc -p src/ && cp -R src/server/keys/ dist/server/keys/",
     "test": "ng test",
     "lint": "ng lint",
