@@ -36,8 +36,8 @@ const provider = new Provider(config.okta_server_url, {
   }
 });
 
-const keystore = require('./keystore.json');
-const integrity = require('./integrity.json');
+let keystore = require('./keystore.json');
+let integrity = require('./integrity.json');
 
 provider.initialize({
   keystore,
