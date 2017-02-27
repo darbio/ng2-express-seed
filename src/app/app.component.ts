@@ -3,10 +3,10 @@ import { Headers, Http, RequestOptions, Response, URLSearchParams } from '@angul
 
 import { ConfigService, ClientConfig } from './config.service';
 import { AuthService } from './auth.service';
+import { AuthHttp } from './auth-http.service';
 
 import { OAuthService } from 'angular-oauth2-oidc';
-import * as JwtDecode from 'jwt-decode';
-import { AuthHttp } from 'angular2-jwt';
+
 import { ToastsManager } from 'ng2-toastr/ng2-toastr'
 
 @Component({
@@ -36,6 +36,6 @@ export class AppComponent {
   get() {
     this.authHttp.get('/api/v1/status').subscribe((response: Response) => {
       this.status = response.json();
-    })
+    });
   }
 }

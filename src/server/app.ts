@@ -23,15 +23,29 @@ const config: Config = new Config();
 
 const provider = new Provider(config.okta_server_url, {
   features: {
-    introspection: true
+    claimsParameter: true,
+    clientCredentials: true,
+    discovery: true,
+    encryption: true,
+    introspection: true,
+    registration: true,
+    request: true,
+    requestUri: true,
+    revocation: true,
+    sessionManagement: true
   }
 });
 
+const keystore = require('./keystore.json');
+const integrity = require('./integrity.json');
+
 provider.initialize({
+  keystore,
+  integrity,
   clients: [
     {
-      client_id: 'foo',
-      client_secret: 'bar',
+      client_id: config.client_id,
+      client_secret: config.client_secret,
       grant_types: [
         'implicit'
       ],
@@ -53,8 +67,6 @@ provider.initialize({
   // Set up bearer authentication strategy
   passport.use(new passportHttpBearer.Strategy(
     function (token, done) {
-      let jwt = jwtDecode(token);
-
       request({
         url: config.okta_server_url + "/.well-known/openid-configuration",
         method: 'GET'
@@ -66,17 +78,17 @@ provider.initialize({
 
         // Verify the token
         var options = {
-            url: discoveryDocument.introspection_endpoint,
-            method: 'POST',
-            headers: {
-              'Content-Type' : 'application/x-www-form-urlencoded',
-              'charset' : 'UTF-8',
-              'Authorization' : 'Basic ' + new Buffer(config.client_id + ':' + config.client_secret).toString('base64')
-            },
-            form: {
-              token: token,
-              token_type_hint: 'id_token'
-            }
+          url: discoveryDocument.introspection_endpoint,
+          method: 'POST',
+          headers: {
+            'Content-Type' : 'application/x-www-form-urlencoded',
+            'charset' : 'UTF-8',
+            'Authorization' : 'Basic ' + new Buffer(config.client_id + ':' + config.client_secret).toString('base64')
+          },
+          form: {
+            token: token,
+            token_type_hint: 'id_token'
+          }
         };
 
         // Start the request
@@ -89,7 +101,10 @@ provider.initialize({
               var userInfo = JSON.parse(body);
 
               if (!userInfo.active) {
-                return done("Token is not active");
+                return done({
+                  status: 401,
+                  message: "Token is not active"
+                });
               }
 
               return done(error, userInfo);
