@@ -26,7 +26,7 @@ if (cluster.isMaster) {
         cluster.fork()
     })
 
-    var numWorkers = process.env.NODE_ENV == 'development' ? 1 : this.numCPUs;
+    var numWorkers = this.numCPUs;
 
     for (var i = 0; i < numWorkers; i++) cluster.fork()
 
