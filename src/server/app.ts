@@ -56,6 +56,10 @@ provider.initialize({
       response_types: [
         'id_token token'
       ],
+      post_logout_redirect_uris: [
+        'https://lvh.me:886/account/login/callback',
+        'https://floating-temple-70367.herokuapp.com/account/login/callback',
+      ],
       redirect_uris: [
         'https://lvh.me:886/account/login/callback',
         'https://floating-temple-70367.herokuapp.com/account/login/callback',
