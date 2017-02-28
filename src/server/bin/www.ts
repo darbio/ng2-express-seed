@@ -11,7 +11,11 @@ import * as os from 'os';
 
 const port = normalizePort(process.env.PORT || 3000);
 
-const numWorkers = os.cpus().length;
+let numWorkers = os.cpus().length;
+if (process.env.NODE_ENV == "development") {
+  numWorkers = 1;
+}
+
 if (cluster.isMaster) {
 
     console.log('Master cluster setting up ' + numWorkers + ' workers...')

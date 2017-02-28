@@ -10,9 +10,10 @@ import * as passport from 'passport';
 import * as passportHttpBearer from 'passport-http-bearer';
 import * as jwtDecode from 'jwt-decode';
 import * as request from 'request';
-//import * as Provider from 'oidc-provider';
 
+//import * as Provider from 'oidc-provider'; // This causes a tsc compilation error when run in npm so we use require instead
 let Provider = require('oidc-provider');
+import { RedisAdapter } from './provider/redis_adapter';
 
 import index from './routes/index';
 import status from './routes/v1/status';
@@ -24,6 +25,7 @@ const app: express.Express = express();
 const config: Config = new Config();
 
 const provider = new Provider(config.okta_server_url, {
+  adapter: RedisAdapter,
   features: {
     claimsParameter: true,
     clientCredentials: true,
@@ -69,6 +71,13 @@ provider.initialize({
   // Set up bearer authentication strategy
   passport.use(new passportHttpBearer.Strategy(
     function (token, done) {
+      if (!token) {
+        done({
+          status: 401,
+          message: "No token present"
+        });
+      }
+
       request({
         url: config.okta_server_url + "/.well-known/openid-configuration",
         method: 'GET'

@@ -6,12 +6,12 @@
   "scripts": {
     "ng": "ng",
     "dev": "ng build && tsc -p src/ && cp -R src/server/keys/ dist/server/keys/ && sudo nf start --ssl-key lvh.me.key --ssl-cert lvh.me.cert -x 443",
-    "start": "node dist/server/bin/www.js",
+    "start": "node --inspect dist/server/bin/www.js",
     "postinstall": "ng build --aot -prod && tsc -p src/ && cp -R src/server/keys/ dist/server/keys/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "tsc" : "tsc -p src/"
+    "tsc": "tsc -p src/"
   },
   "private": true,
   "engines": {
@@ -52,7 +52,9 @@
     "express": "^4.13.3",
     "font-awesome": "^4.7.0",
     "foreman": "2.0.0",
+    "ioredis": "^2.5.0",
     "jwt-decode": "^2.1.0",
+    "lodash": "^4.17.4",
     "morgan": "^1.6.1",
     "ng2-toastr": "^1.4.1",
     "oidc-provider": "^1.13.0",
