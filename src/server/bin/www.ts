@@ -9,10 +9,13 @@ import * as http from 'http';
 import * as cluster from 'cluster';
 import * as os from 'os';
 
+import { Config } from '../../shared/config';
+const config: Config = new Config();
+
 const port = normalizePort(process.env.PORT || 3000);
 
 let numWorkers = os.cpus().length;
-if (process.env.NODE_ENV == "development") {
+if (config.is_development) {
   numWorkers = 1;
 }
 
