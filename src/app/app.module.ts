@@ -19,7 +19,6 @@ import { AuthHttp } from './auth-http.service';
 import { AppRoutes } from './app.routes';
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
-import { LoginCallbackComponent } from './login-callback/login-callback.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
@@ -27,7 +26,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     AppComponent,
     HomeComponent,
     AccountComponent,
-    LoginCallbackComponent,
     PageNotFoundComponent
   ],
   imports: [
