@@ -28,5 +28,5 @@ export class ConfigService {
 
 export interface ClientConfig {
   client_id: string
-  okta_server_url: string
+  oidc_server_url: string
 }

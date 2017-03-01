@@ -31,7 +31,7 @@ export class AuthService {
     this.oauthService.setStorage(sessionStorage);
 
     // The name of the auth-server that has to be mentioned within the token
-    this.oauthService.issuer = this.configService.config.okta_server_url;
+    this.oauthService.issuer = this.configService.config.oidc_server_url;
 
     // Load Discovery Document
     this.oauthService.loadDiscoveryDocument();

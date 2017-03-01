@@ -46,9 +46,13 @@ To use foreman, a file called `.env` should be created with the following conten
 
 ```
 PORT=3000
-OKTA_SERVER_URL=
+OIDC_SERVER_URL=
 AUTH_CLIENT_ID=
 AUTH_CLIENT_SECRET=
+NODE_ENV=development
+SECURE_KEY=
+REDIS_URL=
+DATABASE_URL=
 ```
 
 ### Production

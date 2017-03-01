@@ -24,9 +24,11 @@ import { Config } from '../shared/config';
 const app: express.Express = express();
 const config: Config = new Config();
 
-const provider = new Provider(config.okta_server_url, {
+const provider = new Provider(config.oidc_server_url, {
   adapter: RedisAdapter,
   features: {
+    //devInteractions: false,
+
     claimsParameter: true,
     clientCredentials: true,
     discovery: true,
@@ -83,7 +85,7 @@ provider.initialize({
       }
 
       request({
-        url: config.okta_server_url + "/.well-known/openid-configuration",
+        url: config.oidc_server_url + "/.well-known/openid-configuration",
         method: 'GET'
       }, function (error, response, body) {
         if (error) {
@@ -144,10 +146,14 @@ provider.initialize({
 
   app.use(logger('combined'));
 
+  // App routes
   app.use('/', express.static(path.join(__dirname,'../client')));
   app.use('/api/v1/status', passport.authenticate('bearer', { session: false }), status);
   app.use('/api/v1/config', client_config);
+
+  // Authentication provider
   app.use('/op', provider.callback);
+  
 
   // For all GET requests, send back index.html so that PathLocationStrategy can be used
   app.all('*', (req: any, res: any) => {

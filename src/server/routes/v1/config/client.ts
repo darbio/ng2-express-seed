@@ -10,7 +10,7 @@ router.get('/', (req, res, next) => {
   let config: Config = new Config();
   res.json({
     client_id : config.client_id,
-    okta_server_url : config.okta_server_url
+    oidc_server_url : config.oidc_server_url
   });
 });
 
