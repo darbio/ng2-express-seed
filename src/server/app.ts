@@ -11,9 +11,11 @@ import * as passportHttpBearer from 'passport-http-bearer';
 import * as jwtDecode from 'jwt-decode';
 import * as request from 'request';
 
-//import * as Provider from 'oidc-provider'; // This causes a tsc compilation error when run in npm so we use require instead
+//import * as Provider from 'oidc-provider';
+// This causes a tsc compilation error when run in npm so we use require instead
 let Provider = require('oidc-provider');
 import { RedisAdapter } from './provider/redis_adapter';
+import { Account } from './provider/account';
 
 import index from './routes/index';
 import status from './routes/v1/status';
@@ -25,7 +27,15 @@ const app: express.Express = express();
 const config: Config = new Config();
 
 const provider = new Provider(config.oidc_server_url, {
-  adapter: RedisAdapter,
+  adapter : RedisAdapter,
+  findById : Account.findById,
+  claims : {
+    openid: ['sub'],
+    email: ['email', 'email_verified'],
+  },
+  interactionUrl() {
+    return `/interaction/${this.oidc.uuid}`;
+  },
   features: {
     alwaysIssueRefresh : false,
     backchannelLogout : false,
@@ -134,6 +144,15 @@ provider.initialize({
     }
   ));
 
+  // Set up server side pages
+  app.set('view engine', 'ejs');
+  app.set('views', path.resolve(__dirname, 'views'));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
+
+
   // Redirect all http requests to https
   const forceSSL = function() {
     return function (req, res, next) {
@@ -156,11 +175,46 @@ provider.initialize({
 
   // Authentication provider
   app.use('/op', provider.callback);
+  app.get('/interaction/:grant', (req, res) => {
+    const details = provider.interactionDetails(req);
+    console.log('see what else is available to you for interaction views', details);
 
+    const view = (() => {
+      switch (details.interaction.reason) {
+        case 'consent_prompt':
+        case 'client_not_authorized':
+          return 'interaction';
+        default:
+          return 'login';
+      }
+    })();
+
+    res.render(view, { details });
+  });
+  app.post('/interaction/:grant/confirm', (req, res) => {
+    provider.interactionFinished(req, res, {
+      consent: {},
+    });
+  });
+  app.post('/interaction/:grant/login', (req, res, next) => {
+    Account.authenticate(req.body.email, req.body.password).then((account) => {
+      provider.interactionFinished(req, res, {
+        login: {
+          account: account.accountId,
+          acr: '1',
+          remember: !!req.body.remember,
+          ts: Math.floor(Date.now() / 1000),
+        },
+        consent: {
+          // TODO: remove offline_access from scopes is remember is not checked
+        },
+      });
+    }).catch(next);
+  });
+  //app.use(provider.callback);
 
   // For all GET requests, send back index.html so that PathLocationStrategy can be used
   app.all('*', (req: any, res: any) => {
-    console.log(`[TRACE] Server 404 request: ${req.originalUrl}`);
     res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
   });
 
@@ -173,7 +227,7 @@ provider.initialize({
 
   // Error handlers
   // Development error handler - will print stacktrace
-  if(process.env.NODE_ENV === 'development') {
+  if(config.is_development) {
     // allow us to call self-signed https
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
