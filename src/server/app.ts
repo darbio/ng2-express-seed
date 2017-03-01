@@ -27,18 +27,21 @@ const config: Config = new Config();
 const provider = new Provider(config.oidc_server_url, {
   adapter: RedisAdapter,
   features: {
-    //devInteractions: false,
-
-    claimsParameter: true,
-    clientCredentials: true,
-    discovery: true,
-    encryption: true,
-    introspection: true,
-    registration: true,
-    request: true,
-    requestUri: true,
-    revocation: true,
-    sessionManagement: true
+    alwaysIssueRefresh : false,
+    backchannelLogout : false,
+    claimsParameter : true,
+    clientCredentials : true,
+    devInteractions : true,
+    discovery : true,
+    encryption : true,
+    introspection : true,
+    oauthNativeApps : false,
+    registration : true,
+    registrationManagement : false,
+    request : true,
+    requestUri : true,
+    revocation : true,
+    sessionManagement : true
   }
 });
 
@@ -153,7 +156,7 @@ provider.initialize({
 
   // Authentication provider
   app.use('/op', provider.callback);
-  
+
 
   // For all GET requests, send back index.html so that PathLocationStrategy can be used
   app.all('*', (req: any, res: any) => {
