@@ -36,17 +36,29 @@ const provider = new Provider(config.oidc_server_url, {
   interactionUrl() {
     return `/interaction/${this.oidc.uuid}`;
   },
+  logoutSource(form) {
+    this.body = `<!DOCTYPE html>
+      <head>
+        <title>Logout</title>
+      </head>
+      <body onload="document.forms[0].submit()">
+        ${form}
+        Logging you out... please wait
+        <button type="submit" form="op.logoutForm" name="logout" value="yes" style="display: none;">Yes</button>
+      </body>
+      </html>`;
+  },
   features: {
     alwaysIssueRefresh : false,
     backchannelLogout : false,
     claimsParameter : true,
     clientCredentials : true,
-    devInteractions : true,
+    devInteractions : false,
     discovery : true,
     encryption : true,
     introspection : true,
     oauthNativeApps : false,
-    registration : true,
+    registration : false,
     registrationManagement : false,
     request : true,
     requestUri : true,
@@ -73,10 +85,12 @@ provider.initialize({
       ],
       post_logout_redirect_uris: [
         'https://lvh.me:886/account/login/callback',
+        'https://lvh.me:886',
         'https://floating-temple-70367.herokuapp.com/account/login/callback',
       ],
       redirect_uris: [
         'https://lvh.me:886/account/login/callback',
+        'https://lvh.me:886',
         'https://floating-temple-70367.herokuapp.com/account/login/callback',
       ]
     }

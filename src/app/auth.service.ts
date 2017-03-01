@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Location } from '@angular/common';
@@ -9,11 +10,12 @@ export class AuthService {
 
   constructor(
     private location: Location,
+    private router: Router,
     private oauthService: OAuthService,
     private configService: ConfigService,
   ) {
     // URL of the SPA to redirect the user to after login
-    this.oauthService.redirectUri = window.location.origin + "/account/login/callback";
+    this.oauthService.redirectUri = window.location.origin;// + "/account/login/callback";
 
     // The SPA's id. The SPA is registerd with this id at the auth-server
     this.oauthService.clientId = this.configService.config.client_id;
@@ -34,7 +36,22 @@ export class AuthService {
     this.oauthService.issuer = this.configService.config.oidc_server_url;
 
     // Load Discovery Document
-    this.oauthService.loadDiscoveryDocument();
+    this.oauthService.loadDiscoveryDocument().then(() => {
+        // This method just tries to parse the token(s) within the url when
+        // the auth-server redirects the user back to the web-app
+        // It dosn't send the user the the login page
+        this.oauthService.tryLogin({
+          onTokenReceived : context => {
+            if (context.state) {
+              var unencodedState = new Buffer(context.state, 'base64').toString('ascii');
+              this.router.navigateByUrl(unencodedState);
+            }
+            else {
+              this.router.navigate(['/']);
+            }
+          }
+        });
+    });
   }
 
   login() {
