@@ -24,6 +24,9 @@ export class AppErrorHandler extends ErrorHandler {
     if (error.status){
       if (error.status == 401) {
         // If this is a 401 then login
+        if (this.auth.loggedIn) {
+          this.auth.logout();
+        }
         this.auth.login();
         return;
       }
