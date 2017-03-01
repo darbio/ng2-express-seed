@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Location } from '@angular/common';
@@ -7,6 +8,8 @@ import { ConfigService, ClientConfig } from './config.service';
 
 @Injectable()
 export class AuthService {
+
+  public is_logged_in: Observable<Boolean>;
 
   constructor(
     private location: Location,
@@ -64,7 +67,23 @@ export class AuthService {
     this.oauthService.logOut();
   }
 
-  loggedIn() {
+  getAuthenticated() : Observable<boolean> {
+    let that = this;
+    return Observable.create(function (observer) {
+      let timer = setInterval(() => {
+        if (that.oauthService.discoveryDocumentLoaded) {
+          // Return our value
+          observer.next(that.loggedIn());
+          observer.complete();
+
+          // Stop our callback
+          clearInterval(timer);
+        }
+      }, 600);
+    });
+  }
+
+  loggedIn(): boolean {
     let token = this.oauthService.getIdToken();
 
     let is_expired = !tokenNotExpired(null, token);
