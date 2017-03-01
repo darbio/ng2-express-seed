@@ -28,7 +28,7 @@ const provider = new Provider(config.oidc_server_url, {
   adapter: RedisAdapter,
   features: {
     alwaysIssueRefresh : false,
-    backchannelLogout : true,
+    backchannelLogout : false,
     claimsParameter : true,
     clientCredentials : true,
     devInteractions : true,
