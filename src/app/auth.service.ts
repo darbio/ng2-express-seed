@@ -68,7 +68,15 @@ export class AuthService {
     Cookie.deleteAll();
   }
 
-  loggedIn() : Observable<boolean> {
+  getClaims(): Observable<any> {
+    let that = this;
+    return Observable.create(function (observer) {
+      let claims = that.oauthService.getIdentityClaims();
+      observer.next(claims);
+    });
+  }
+
+  loggedIn(): Observable<boolean> {
     let that = this;
     return Observable.create(function (observer) {
       let timer = setInterval(() => {

@@ -1,10 +1,6 @@
-<h1>
-  {{title}}
-</h1>
+<!-- <button class="btn btn-primary" (click)="get()">Get status</button>
+<p>{{ status | json}}</p> -->
 
-<button (click)="logout()"><i class="fa fa-user"></i> Logout</button>
-<button class="btn btn-primary" (click)="get()">Get status</button>
-
-<p>{{ status | json}}</p>
-
+<app-navbar *ngIf="is_logged_in"></app-navbar>
 <router-outlet></router-outlet>
+<app-footer *ngIf="is_logged_in"></app-footer>
