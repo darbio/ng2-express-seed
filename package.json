@@ -56,6 +56,7 @@
     "jwt-decode": "^2.1.0",
     "lodash": "^4.17.4",
     "morgan": "^1.6.1",
+    "ng2-cookies": "^1.0.4",
     "ng2-toastr": "^1.4.1",
     "oidc-provider": "^1.13.0",
     "passport": "^0.3.2",

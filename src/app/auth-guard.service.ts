@@ -13,7 +13,7 @@ export class AuthGuardService implements CanActivate {
   ) {}
 
   canActivate(): Observable<boolean> | boolean {
-    return this.authService.getAuthenticated().map((is_logged_in: boolean) => {
+    return this.authService.loggedIn().map((is_logged_in: boolean) => {
       if (!is_logged_in) {
         this.authService.login();
       }

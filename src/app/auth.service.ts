@@ -5,20 +5,20 @@ import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Location } from '@angular/common';
 import { ConfigService, ClientConfig } from './config.service';
+import { Cookie } from 'ng2-cookies';
 
 @Injectable()
 export class AuthService {
-
-  public is_logged_in: Observable<Boolean>;
 
   constructor(
     private location: Location,
     private router: Router,
     private oauthService: OAuthService,
     private configService: ConfigService,
+    private cookie: Cookie
   ) {
     // URL of the SPA to redirect the user to after login
-    this.oauthService.redirectUri = window.location.origin;// + "/account/login/callback";
+    this.oauthService.redirectUri = window.location.origin;
 
     // The SPA's id. The SPA is registerd with this id at the auth-server
     this.oauthService.clientId = this.configService.config.client_id;
@@ -57,23 +57,28 @@ export class AuthService {
     });
   }
 
-  login() {
+  login(): void {
     // Init implicit with extra state for redirect
     let additionalState = new Buffer(this.location.path(false)).toString('base64');
     this.oauthService.initImplicitFlow(additionalState);
   }
 
-  logout() {
-    this.oauthService.logOut();
+  logout(no_redirect: boolean = false): void {
+    this.oauthService.logOut(no_redirect);
+    Cookie.deleteAll();
   }
 
-  getAuthenticated() : Observable<boolean> {
+  loggedIn() : Observable<boolean> {
     let that = this;
     return Observable.create(function (observer) {
       let timer = setInterval(() => {
         if (that.oauthService.discoveryDocumentLoaded) {
+          // Work out if we are logged in
+          let token = that.oauthService.getIdToken();
+          let is_expired = !tokenNotExpired(null, token);
+
           // Return our value
-          observer.next(that.loggedIn());
+          observer.next(!is_expired);
           observer.complete();
 
           // Stop our callback
@@ -81,13 +86,6 @@ export class AuthService {
         }
       }, 600);
     });
-  }
-
-  loggedIn(): boolean {
-    let token = this.oauthService.getIdToken();
-
-    let is_expired = !tokenNotExpired(null, token);
-    return !is_expired;
   }
 
 }

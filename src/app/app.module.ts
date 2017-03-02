@@ -15,12 +15,13 @@ import { AppErrorHandler } from './app-error.handler';
 
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
 import { AuthHttp } from './auth-http.service';
+import { Cookie } from 'ng2-cookies';
 
 import { AppRoutes } from './app.routes';
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { LoginComponent } from './login/login.component';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { LoginComponent } from './login/login.component';
     HomeComponent,
     AccountComponent,
     PageNotFoundComponent,
-    LoginComponent
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +58,8 @@ import { LoginComponent } from './login/login.component';
     {
       provide: ErrorHandler,
       useClass: AppErrorHandler
-    }
+    },
+    Cookie
   ],
   bootstrap: [
     AppComponent

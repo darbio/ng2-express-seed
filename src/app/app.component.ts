@@ -1,12 +1,12 @@
 import { Component, ViewContainerRef } from '@angular/core';
 import { Headers, Http, RequestOptions, Response, URLSearchParams } from '@angular/http';
+import { Router } from '@angular/router';
 
 import { ConfigService, ClientConfig } from './config.service';
 import { AuthService } from './auth.service';
 import { AuthHttp } from './auth-http.service';
 
 import { OAuthService } from 'angular-oauth2-oidc';
-
 import { ToastsManager } from 'ng2-toastr/ng2-toastr'
 
 @Component({
@@ -21,6 +21,7 @@ export class AppComponent {
   constructor(
     private http: Http,
     private authHttp: AuthHttp,
+    private router: Router,
     private auth: AuthService,
     private toastr: ToastsManager,
     private vRef: ViewContainerRef

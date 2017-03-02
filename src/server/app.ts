@@ -41,7 +41,7 @@ const provider = new Provider(config.oidc_server_url, {
       <head>
         <title>Logout</title>
       </head>
-      <body onload="document.forms[0].submit()">
+      <body onload="document.getElementsByName('logout')[0].click()">
         ${form}
         Logging you out... please wait
         <button type="submit" form="op.logoutForm" name="logout" value="yes" style="display: none;">Yes</button>
