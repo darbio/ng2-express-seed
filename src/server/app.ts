@@ -189,7 +189,6 @@ provider.initialize({
   app.use('/op', provider.callback);
   app.get('/interaction/:grant', (req, res) => {
     const details = provider.interactionDetails(req);
-    console.log('see what else is available to you for interaction views', details);
 
     const view = (() => {
       switch (details.interaction.reason) {
