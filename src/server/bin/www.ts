@@ -9,9 +9,16 @@ import * as http from 'http';
 import * as cluster from 'cluster';
 import * as os from 'os';
 
+import { Config } from '../../shared/config';
+const config: Config = new Config();
+
 const port = normalizePort(process.env.PORT || 3000);
 
-const numCPUs = os.cpus().length;
+let numWorkers = os.cpus().length;
+if (config.is_development) {
+  numWorkers = 1;
+}
+
 if (cluster.isMaster) {
 
     console.log('Master cluster setting up ' + numWorkers + ' workers...')
@@ -25,8 +32,6 @@ if (cluster.isMaster) {
         console.log('Starting a new worker')
         cluster.fork()
     })
-
-    var numWorkers = require('os').cpus().length
 
     for (var i = 0; i < numWorkers; i++) cluster.fork()
 

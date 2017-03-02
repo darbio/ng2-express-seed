@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Location } from '@angular/common';
 import { ConfigService, ClientConfig } from './config.service';
+import { Cookie } from 'ng2-cookies';
 
 @Injectable()
 export class AuthService {
 
   constructor(
     private location: Location,
+    private router: Router,
     private oauthService: OAuthService,
     private configService: ConfigService,
+    private cookie: Cookie
   ) {
     // URL of the SPA to redirect the user to after login
-    this.oauthService.redirectUri = window.location.origin + "/account/login/callback";
+    this.oauthService.redirectUri = window.location.origin;
 
     // The SPA's id. The SPA is registerd with this id at the auth-server
     this.oauthService.clientId = this.configService.config.client_id;
@@ -31,27 +36,56 @@ export class AuthService {
     this.oauthService.setStorage(sessionStorage);
 
     // The name of the auth-server that has to be mentioned within the token
-    this.oauthService.issuer = this.configService.config.okta_server_url;
+    this.oauthService.issuer = this.configService.config.oidc_server_url;
 
     // Load Discovery Document
-    this.oauthService.loadDiscoveryDocument();
+    this.oauthService.loadDiscoveryDocument().then(() => {
+        // This method just tries to parse the token(s) within the url when
+        // the auth-server redirects the user back to the web-app
+        // It dosn't send the user the the login page
+        this.oauthService.tryLogin({
+          onTokenReceived : context => {
+            if (context.state) {
+              var unencodedState = new Buffer(context.state, 'base64').toString('ascii');
+              this.router.navigateByUrl(unencodedState);
+            }
+            else {
+              this.router.navigate(['/']);
+            }
+          }
+        });
+    });
   }
 
-  login() {
+  login(): void {
     // Init implicit with extra state for redirect
     let additionalState = new Buffer(this.location.path(false)).toString('base64');
     this.oauthService.initImplicitFlow(additionalState);
   }
 
-  logout() {
-    this.oauthService.logOut();
+  logout(no_redirect: boolean = false): void {
+    this.oauthService.logOut(no_redirect);
+    Cookie.deleteAll();
   }
 
-  loggedIn() {
-    let token = this.oauthService.getIdToken();
+  loggedIn() : Observable<boolean> {
+    let that = this;
+    return Observable.create(function (observer) {
+      let timer = setInterval(() => {
+        if (that.oauthService.discoveryDocumentLoaded) {
+          // Work out if we are logged in
+          let token = that.oauthService.getIdToken();
+          let is_expired = !tokenNotExpired(null, token);
 
-    let is_expired = !tokenNotExpired(null, token);
-    return !is_expired;
+          // Return our value
+          observer.next(!is_expired);
+          observer.complete();
+
+          // Stop our callback
+          clearInterval(timer);
+        }
+      }, 600);
+    });
   }
 
 }

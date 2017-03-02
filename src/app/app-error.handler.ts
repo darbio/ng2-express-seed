@@ -1,4 +1,5 @@
 import { Injectable, Injector, ErrorHandler } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 import { AuthService } from './auth.service';
 
@@ -7,6 +8,7 @@ export class AppErrorHandler extends ErrorHandler {
 
   toastr: ToastsManager;
   auth: AuthService;
+  router: Router;
 
   constructor(
     // Don't inject things here as they cause a circular dependency in ng2
@@ -23,8 +25,16 @@ export class AppErrorHandler extends ErrorHandler {
     // HTTP Errors
     if (error.status){
       if (error.status == 401) {
-        // If this is a 401 then login
-        this.auth.login();
+        // Log the user out of the entire context
+        // Do this without a redirect
+        // This is needed to ensure that there are no tokens left in our browser
+        this.auth.logout(true);
+
+        // Send the user back to the home page
+        // This will ensure that they are logged in
+        this.router.navigate(['/unauthorized']);
+
+        // End here so that we don't do anything else
         return;
       }
     }
@@ -43,6 +53,10 @@ export class AppErrorHandler extends ErrorHandler {
 
     if (!this.auth) {
       this.auth = this.injector.get(AuthService);
+    }
+
+    if (!this.router) {
+      this.router = this.injector.get(Router);
     }
   }
 

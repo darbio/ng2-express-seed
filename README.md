@@ -38,13 +38,21 @@ The server uses express 4 secured with the passport-http-bearer middleware (http
 
 `npm run dev`
 
+or
+
+`ng build && tsc -p src/ && node generate-keys.js && sudo nf start --ssl-key lvh.me.key --ssl-cert lvh.me.cert -x 443`
+
 To use foreman, a file called `.env` should be created with the following content:
 
 ```
 PORT=3000
-OKTA_SERVER_URL=
+OIDC_SERVER_URL=
 AUTH_CLIENT_ID=
 AUTH_CLIENT_SECRET=
+NODE_ENV=development
+SECURE_KEY=
+REDIS_URL=
+DATABASE_URL=
 ```
 
 ### Production

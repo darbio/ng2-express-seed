@@ -14,21 +14,22 @@ import { AuthGuardService, NotAuthGuardService } from './auth-guard.service';
 import { AppErrorHandler } from './app-error.handler';
 
 import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
-import { AuthHttp, AuthConfig } from 'angular2-jwt';
+import { AuthHttp } from './auth-http.service';
+import { Cookie } from 'ng2-cookies';
 
 import { AppRoutes } from './app.routes';
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
-import { LoginCallbackComponent } from './login-callback/login-callback.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     AccountComponent,
-    LoginCallbackComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    UnauthorizedComponent
   ],
   imports: [
     BrowserModule,
@@ -40,15 +41,6 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     ToastModule.forRoot()
   ],
   providers: [
-    {
-      provide: AuthHttp,
-      useFactory: authHttpServiceFactory,
-      deps: [
-        Http,
-        RequestOptions,
-        OAuthService
-      ]
-    },
     ConfigService,
     {
       provide: APP_INITIALIZER,
@@ -59,34 +51,21 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
       multi: true
     },
     AuthService,
+    AuthHttp,
     AuthGuardService,
     NotAuthGuardService,
     AppErrorHandler,
     {
       provide: ErrorHandler,
       useClass: AppErrorHandler
-    }
+    },
+    Cookie
   ],
   bootstrap: [
     AppComponent
   ]
 })
 export class AppModule { }
-
-export function authHttpServiceFactory(
-  http: Http,
-  options: RequestOptions,
-  oauthService: OAuthService
-) {
-  return new AuthHttp(new AuthConfig({
-    noJwtError: true,
-    tokenName: 'token',
-        tokenGetter: (() => oauthService.getIdToken()),
-        globalHeaders: [
-          { 'Content-Type' : 'application/json' }
-        ],
-    }), http, options);
-}
 
 export function configServiceFactory(config: ConfigService) {
   return () => config.load();
