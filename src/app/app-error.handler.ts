@@ -54,6 +54,10 @@ export class AppErrorHandler extends ErrorHandler {
     if (!this.auth) {
       this.auth = this.injector.get(AuthService);
     }
+
+    if (!this.router) {
+      this.router = this.injector.get(Router);
+    }
   }
 
 }
