@@ -4,6 +4,12 @@
   font-size: 85%;
   background-color: #f7f7f7;
   text-align: left;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+
+  /* Set the fixed height of the footer here */
+  height: 140px;
 }
 
 .footer a {
