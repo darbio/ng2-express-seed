@@ -58,6 +58,7 @@
     "morgan": "^1.6.1",
     "ng2-cookies": "^1.0.4",
     "ng2-toastr": "^1.4.1",
+    "node-redis-pubsub": "^1.0.2",
     "oidc-provider": "^1.13.0",
     "passport": "^0.3.2",
     "passport-http-bearer": "^1.0.1",
@@ -68,6 +69,7 @@
     "ts-node": "~2.0.0",
     "tslint": "~4.4.2",
     "typescript": "~2.0.0",
+    "uuid": "^3.0.1",
     "zone.js": "^0.7.6"
   },
   "devDependencies": {
