@@ -1,12 +1,7 @@
-import { Component, ViewContainerRef } from '@angular/core';
-import { Headers, Http, RequestOptions, Response, URLSearchParams } from '@angular/http';
-import { Router } from '@angular/router';
-
-import { ConfigService, ClientConfig } from './config.service';
+import { Component, OnInit, ViewContainerRef } from '@angular/core';
+import { Response } from '@angular/http';
 import { AuthService } from './auth.service';
 import { AuthHttp } from './auth-http.service';
-
-import { OAuthService } from 'angular-oauth2-oidc';
 import { ToastsManager } from 'ng2-toastr/ng2-toastr'
 
 @Component({
@@ -14,14 +9,14 @@ import { ToastsManager } from 'ng2-toastr/ng2-toastr'
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'app works!';
   status: any = {};
 
+  is_logged_in: boolean = false;
+
   constructor(
-    private http: Http,
     private authHttp: AuthHttp,
-    private router: Router,
     private auth: AuthService,
     private toastr: ToastsManager,
     private vRef: ViewContainerRef
@@ -30,13 +25,15 @@ export class AppComponent {
     this.toastr.setRootViewContainerRef(vRef);
   }
 
-  logout() {
-    this.auth.logout();
-  }
-
-  get() {
-    this.authHttp.get('/api/v1/status').subscribe((response: Response) => {
-      this.status = response.json();
+  ngOnInit() {
+    this.auth.loggedIn().subscribe((is_logged_in) => {
+      this.is_logged_in = is_logged_in;
     });
   }
+
+  // get() {
+  //   this.authHttp.get('/api/v1/status').subscribe((response: Response) => {
+  //     this.status = response.json();
+  //   });
+  // }
 }

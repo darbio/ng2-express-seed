@@ -1,0 +1,10 @@
+{
+  "/op" :{
+    "target" : "https://lvh.me:886/",
+    "secure" : true
+  },
+   "/api": {
+     "target" : "https://lvh.me:886/",
+     "secure" : true
+   }
+}

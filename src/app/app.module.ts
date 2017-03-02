@@ -22,6 +22,8 @@ import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
     HomeComponent,
     AccountComponent,
     PageNotFoundComponent,
-    UnauthorizedComponent
+    UnauthorizedComponent,
+    NavbarComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
